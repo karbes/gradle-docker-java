@@ -31,6 +31,7 @@ class DockerJavaPluginTest extends Specification {
             }
             mainClassName = 'cz.augi.gradle.dockerjava.TestApp'
             dockerJava {
+                baseImage = 'eclipse-temurin:17.0.10_7-jre'
                 image = "test/my-app:$version"
                 ports = [80, 8080]
                 volumes = ['/test-volume']
@@ -62,6 +63,7 @@ class DockerJavaPluginTest extends Specification {
         dockerRunOutput.contains('Hello from Docker, developer')
         labels.'org.label-schema.schema-version' == '1.0'
         labels.'org.label-schema.version' == '1.2.3'
+        labels.'org.opencontainers.image.version' == '1.2.3'
         labels.'mylabel' == 'mylabelvalue'
         def workingDirectory = Paths.get(projectDir.absolutePath, 'build', 'dockerJava')
         Files.exists(workingDirectory.resolve('Dockerfile'))

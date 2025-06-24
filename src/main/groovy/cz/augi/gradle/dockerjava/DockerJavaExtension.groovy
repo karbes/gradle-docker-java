@@ -2,28 +2,26 @@ package cz.augi.gradle.dockerjava
 
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
+import org.gradle.api.tasks.Internal
 
 class DockerJavaExtension implements DistDockerSettings, DockerPushSettings {
-    final Project project
-    final DockerExecutor dockerExecutor
+    @Internal final Project project
 
-    DockerJavaExtension(Project project, DockerExecutor dockerExecutor) {
-        this.dockerExecutor = dockerExecutor
+    DockerJavaExtension(Project project) {
         this.project = project
         this.dockerBuildDirectory = new File(project.buildDir, 'dockerJava')
+        this.dockerBuildDirectory.mkdirs()
     }
 
     String image
     String[] alternativeImages = []
-    JavaVersion getJavaVersion() { customJavaVersion ?: project.targetCompatibility }
-    void setJavaVersion(JavaVersion version) { customJavaVersion = version }
-    private JavaVersion customJavaVersion
     String baseImage
     Integer[] ports = []
     String[] volumes = []
     Map<String, String> labels = [:]
     String[] dockerfileLines = []
     String[] arguments = []
+    String[] dockerBuildArgs = []
     File dockerBuildDirectory
     File[] filesToCopy = []
     File customDockerfile

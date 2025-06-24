@@ -4,7 +4,7 @@ import org.gradle.api.Project
 import org.gradle.api.logging.Logger
 import org.gradle.platform.base.Platform
 import org.gradle.process.ExecSpec
-import org.gradle.util.VersionNumber
+import org.gradle.util.internal.VersionNumber
 
 class DockerExecutor {
     private final Project project
@@ -50,6 +50,8 @@ class DockerExecutor {
     }
 
     VersionNumber getVersion() {
-        VersionNumber.parse(executeToString('version', '--format', '{{.Server.Version}}'))
+        String v = executeToString('version', '--format', '{{.Server.Version}}')
+        if (v.indexOf('+') > 0) v = v.substring(0, v.indexOf('+'))
+        VersionNumber.parse(v)
     }
 }
